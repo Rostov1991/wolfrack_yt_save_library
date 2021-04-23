@@ -1,18 +1,18 @@
 <?php
 
-namespace Alltube\Library;
+namespace Wolfrack\Library;
 
-use Alltube\Library\Exception\AlltubeLibraryException;
-use Alltube\Library\Exception\AvconvException;
-use Alltube\Library\Exception\EmptyUrlException;
-use Alltube\Library\Exception\InvalidProtocolConversionException;
-use Alltube\Library\Exception\InvalidTimeException;
-use Alltube\Library\Exception\PasswordException;
-use Alltube\Library\Exception\PlaylistConversionException;
-use Alltube\Library\Exception\PopenStreamException;
-use Alltube\Library\Exception\RemuxException;
-use Alltube\Library\Exception\WrongPasswordException;
-use Alltube\Library\Exception\YoutubedlException;
+use Wolfrack\Library\Exception\WolfrackLibraryException;
+use Wolfrack\Library\Exception\AvconvException;
+use Wolfrack\Library\Exception\EmptyUrlException;
+use Wolfrack\Library\Exception\InvalidProtocolConversionException;
+use Wolfrack\Library\Exception\InvalidTimeException;
+use Wolfrack\Library\Exception\PasswordException;
+use Wolfrack\Library\Exception\PlaylistConversionException;
+use Wolfrack\Library\Exception\PopenStreamException;
+use Wolfrack\Library\Exception\RemuxException;
+use Wolfrack\Library\Exception\WrongPasswordException;
+use Wolfrack\Library\Exception\YoutubedlException;
 use GuzzleHttp\Client;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
@@ -274,7 +274,7 @@ class Downloader
      *
      * @param Video $video Video object
      * @return resource popen stream
-     * @throws AlltubeLibraryException
+     * @throws WolfrackLibraryException
      * @throws AvconvException If avconv/ffmpeg is missing
      * @throws PopenStreamException If the popen stream was not created correctly
      */
@@ -339,7 +339,7 @@ class Downloader
      *
      * @param Video $video Video object
      * @return resource popen stream
-     * @throws AlltubeLibraryException
+     * @throws WolfrackLibraryException
      * @throws PopenStreamException If the popen stream was not created correctly
      * @throws RemuxException If the video does not have two URLs
      */
@@ -379,7 +379,7 @@ class Downloader
      *
      * @param Video $video Video object
      * @return resource popen stream
-     * @throws AlltubeLibraryException
+     * @throws WolfrackLibraryException
      * @throws PopenStreamException If the popen stream was not created correctly
      */
     public function getRtmpStream(Video $video)
@@ -466,7 +466,7 @@ class Downloader
      *
      * @return string[] Extractors
      *
-     * @throws AlltubeLibraryException
+     * @throws WolfrackLibraryException
      */
     public function getExtractors()
     {
@@ -481,7 +481,7 @@ class Downloader
      * @param mixed[] $headers HTTP headers of the request
      *
      * @return ResponseInterface
-     * @throws AlltubeLibraryException
+     * @throws WolfrackLibraryException
      * @link https://github.com/guzzle/guzzle/issues/2640
      */
     public function getHttpResponse(Video $video, array $headers = [])

@@ -1,13 +1,13 @@
 <?php
 
-namespace Alltube\Library\Exception;
+namespace Wolfrack\Library\Exception;
 
 use Exception;
 
 /**
- * Base class for Alltube exceptions.
+ * Base class for Wolfrack exceptions.
  */
-abstract class AlltubeLibraryException extends Exception
+abstract class WolfrackLibraryException extends Exception
 {
 
 }

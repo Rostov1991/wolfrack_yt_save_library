@@ -4,11 +4,11 @@
  * PasswordException class.
  */
 
-namespace Alltube\Library\Exception;
+namespace Wolfrack\Library\Exception;
 
 /**
  * Exception thrown when a video requires a password.
  */
-class PasswordException extends AlltubeLibraryException
+class PasswordException extends WolfrackLibraryException
 {
 }

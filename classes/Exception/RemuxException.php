@@ -1,10 +1,10 @@
 <?php
 
-namespace Alltube\Library\Exception;
+namespace Wolfrack\Library\Exception;
 
 /**
  * Generic remux exception.
  */
-class RemuxException extends AlltubeLibraryException
+class RemuxException extends WolfrackLibraryException
 {
 }

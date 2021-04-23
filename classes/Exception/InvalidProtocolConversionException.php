@@ -1,11 +1,11 @@
 <?php
 
-namespace Alltube\Library\Exception;
+namespace Wolfrack\Library\Exception;
 
 /**
  * Invalid conversion.
  */
-class InvalidProtocolConversionException extends AlltubeLibraryException
+class InvalidProtocolConversionException extends WolfrackLibraryException
 {
     /**
      * InvalidProtocolConversionException constructor.

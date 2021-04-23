@@ -1,11 +1,11 @@
 <?php
 
-namespace Alltube\Library\Exception;
+namespace Wolfrack\Library\Exception;
 
 /**
  * Can't find avconv or ffmpeg.
  */
-class AvconvException extends AlltubeLibraryException
+class AvconvException extends WolfrackLibraryException
 {
     /**
      * AvconvException constructor.

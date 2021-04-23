@@ -1,11 +1,11 @@
 <?php
 
-namespace Alltube\Library\Exception;
+namespace Wolfrack\Library\Exception;
 
 /**
  * Conversion of playlists is not supported.
  */
-class PlaylistConversionException extends AlltubeLibraryException
+class PlaylistConversionException extends WolfrackLibraryException
 {
     /**
      * Error message.

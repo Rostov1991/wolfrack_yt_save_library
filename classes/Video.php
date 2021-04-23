@@ -4,12 +4,12 @@
  * Video class.
  */
 
-namespace Alltube\Library;
+namespace Wolfrack\Library;
 
-use Alltube\Library\Exception\EmptyUrlException;
-use Alltube\Library\Exception\PasswordException;
-use Alltube\Library\Exception\WrongPasswordException;
-use Alltube\Library\Exception\YoutubedlException;
+use Wolfrack\Library\Exception\EmptyUrlException;
+use Wolfrack\Library\Exception\PasswordException;
+use Wolfrack\Library\Exception\WrongPasswordException;
+use Wolfrack\Library\Exception\YoutubedlException;
 use stdClass;
 
 /**

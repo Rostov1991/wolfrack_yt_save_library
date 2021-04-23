@@ -1,11 +1,11 @@
 <?php
 
-namespace Alltube\Library\Exception;
+namespace Wolfrack\Library\Exception;
 
 /**
  * Could not open popen stream.
  */
-class PopenStreamException extends AlltubeLibraryException
+class PopenStreamException extends WolfrackLibraryException
 {
     /**
      * Error message.

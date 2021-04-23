@@ -1,11 +1,11 @@
 <?php
 
-namespace Alltube\Library\Exception;
+namespace Wolfrack\Library\Exception;
 
 /**
  * Invalid time.
  */
-class InvalidTimeException extends AlltubeLibraryException
+class InvalidTimeException extends WolfrackLibraryException
 {
 
     /**

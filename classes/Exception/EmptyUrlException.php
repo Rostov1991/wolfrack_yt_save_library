@@ -4,12 +4,12 @@
  * EmptyUrlException class.
  */
 
-namespace Alltube\Library\Exception;
+namespace Wolfrack\Library\Exception;
 
 /**
  * Exception thrown when youtube-dl returns an empty URL.
  */
-class EmptyUrlException extends AlltubeLibraryException
+class EmptyUrlException extends WolfrackLibraryException
 {
     /**
      * Error message.
