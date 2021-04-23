@@ -1,0 +1,12 @@
+---
+parameters:
+  ascii: ~
+  tasks:
+    jsonlint: ~
+    xmllint: ~
+    yamllint: ~
+    composer: ~
+    phpcs:
+      standard: PSR12
+    phpstan:
+      level: max
