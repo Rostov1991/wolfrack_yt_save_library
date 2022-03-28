@@ -4,16 +4,9 @@ namespace Wolfrack\Library\Exception;
 
 use Symfony\Component\Process\Process;
 
-/**
- * Generic youtube-dl error.
- */
 class YoutubedlException extends WolfrackLibraryException
 {
-    /**
-     * YoutubedlException constructor.
-     *
-     * @param Process<string> $process Process that caused the exception
-     */
+
     public function __construct(Process $process)
     {
         parent::__construct(

@@ -1,26 +1,18 @@
-## S.V.A.
+## 🐗 Description____(Auto generated)
+ <img src="/.info/img/art.jpg" alt="Art" width="69%"/>
 
-This is an auto generated markdown for an S.V.A. (Svart Mane Asyl) repo.
+Projects might be in an archived state after certain periods.
 
----
+## 🍁 We are in Slack____
 
+Voit tavoittaa meidät kautta <a href="https://join.slack.com/t/svartmaneasyl/shared_invite/zt-g2qhdqkg-wjrpG5KTQbEChPtSMdMu6A"><img width="200" src="/.info/img/slack.svg"/></a>
 
-| Role| Creditor |
-| ------:| -----------:|
-| Dev| Anas Gamrani |
-| Deployment| --dev via Vercel/Heroku/Netlify and/or AWS/GCP/AZ |
-| Maintaining | -- dev |
+[![Rostov1991](https://profilechart.herokuapp.com/graph?username=Rostov1991)](https://github.com/Rostov1991)
 
-## Contribution__
+> 🍄 Devbranch channel
 
- <img src="https://octodex.github.com/images/kimonotocat.png" alt="Kimonotocat" width="200"/>
+ <img src="https://raw.githubusercontent.com/Rostov1991/profile_terminal/master/github_stats.svg"/>
 
-You can contribute to our projects by simply making a pull request : )
-
-
-## Join Us__
-
-You can reach to us via our [Slack Workspace](https://join.slack.com/t/svartmaneasyl/shared_invite/zt-g2qhdqkg-wjrpG5KTQbEChPtSMdMu6A )
-
-
-> devbranch channel
+![GitHub User's stars](https://img.shields.io/github/stars/Rostov1991?style=social&logoColor=3b1a2a)
+![GitHub followers](https://img.shields.io/github/followers/Rostov1991?style=social&logoColor=ffade2)
+![Maintenance](https://img.shields.io/maintenance/yes/2021?color=red&style=social&logo=github&logoColor=e91a47)

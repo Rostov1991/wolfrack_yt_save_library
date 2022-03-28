@@ -19,69 +19,23 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Symfony\Component\Process\Process;
 
-/**
- * Class used to call youtube-dl and download videos.
- */
 class Downloader
 {
 
-    /**
-     * youtube-dl binary path.
-     *
-     * @var string
-     */
     private $youtubedl;
 
-    /**
-     * python binary path.
-     *
-     * @var string
-     */
     private $python;
 
-    /**
-     * avconv or ffmpeg binary path.
-     *
-     * @var string
-     */
     private $avconv;
 
-    /**
-     * avconv/ffmpeg logging level.
-     * Must be one of these: quiet, panic, fatal, error, warning, info, verbose, debug.
-     *
-     * @var string
-     */
     private $avconvVerbosity;
 
-    /**
-     * Path to the directory that contains the phantomjs binary.
-     *
-     * @var string
-     */
     private $phantomjsDir;
 
-    /**
-     * youtube-dl parameters.
-     *
-     * @var string[]
-     */
     private $params;
 
-    /**
-     * @var LoggerInterface
-     */
     private $logger;
 
-    /**
-     * Downloader constructor.
-     * @param string $youtubedl youtube-dl binary path
-     * @param string[] $params youtube-dl parameters
-     * @param string $python python binary path
-     * @param string $avconv avconv or ffmpeg binary path
-     * @param string $phantomjsDir Path to the directory that contains the phantomjs binary
-     * @param string $avconvVerbosity avconv/ffmpeg logging level
-     */
     public function __construct(
         $youtubedl = '/usr/bin/youtube-dl',
         array $params = ['--no-warnings'],
@@ -100,33 +54,16 @@ class Downloader
         $this->logger = new NullLogger();
     }
 
-    /**
-     * @param LoggerInterface $logger
-     * @return void
-     */
     public function setLogger(LoggerInterface $logger)
     {
         $this->logger = $logger;
     }
 
-    /**
-     * @param string $webpageUrl URL of the page containing the video
-     * @param string $requestedFormat Requested video format
-     * @param string|null $password Password
-     * @return Video
-     */
     public function getVideo(string $webpageUrl, $requestedFormat = 'best/bestvideo', string $password = null)
     {
         return new Video($this, $webpageUrl, $requestedFormat, $password);
     }
 
-    /**
-     * Return a youtube-dl process with the specified arguments.
-     *
-     * @param string[] $arguments Arguments
-     *
-     * @return Process<string>
-     */
     private function getProcess(array $arguments)
     {
         return new Process(
@@ -138,13 +75,6 @@ class Downloader
         );
     }
 
-    /**
-     * Check if a command runs successfully.
-     *
-     * @param string[] $command Command and arguments
-     *
-     * @return bool False if the command returns an error, true otherwise
-     */
     public static function checkCommand(array $command)
     {
         $process = new Process($command);
@@ -153,24 +83,6 @@ class Downloader
         return $process->isSuccessful();
     }
 
-    /**
-     * Get a process that runs avconv in order to convert a video.
-     *
-     * @param Video $video Video object
-     * @param int $audioBitrate Audio bitrate of the converted file
-     * @param string $filetype Filetype of the converted file
-     * @param bool $audioOnly True to return an audio-only file
-     * @param string|null $from Start the conversion at this time
-     * @param string|null $to End the conversion at this time
-     *
-     * @return Process<string> Process
-     * @throws AvconvException If avconv/ffmpeg is missing
-     * @throws EmptyUrlException
-     * @throws InvalidTimeException
-     * @throws PasswordException
-     * @throws WrongPasswordException
-     * @throws YoutubedlException
-     */
     private function getAvconvProcess(
         Video $video,
         int $audioBitrate,
@@ -225,7 +137,6 @@ class Downloader
             ]
         );
 
-        //Vimeo needs a correct user-agent
         $arguments[] = '-user_agent';
         $arguments[] = $video->getProp('dump-user-agent');
 
@@ -235,21 +146,9 @@ class Downloader
         return $process;
     }
 
-
-    /**
-     * Call youtube-dl.
-     *
-     * @param string[] $arguments Arguments
-     *
-     * @return string Result
-     * @throws WrongPasswordException If the password is wrong
-     * @throws YoutubedlException If youtube-dl returns an error
-     * @throws PasswordException If the video is protected by a password and no password was specified
-     */
     public function callYoutubedl(array $arguments)
     {
         $process = $this->getProcess($arguments);
-        //This is needed by the openload extractor because it runs PhantomJS
         $process->setEnv(['PATH' => $this->phantomjsDir]);
         $this->logger->debug($process->getCommandLine());
         $process->run();
@@ -267,17 +166,7 @@ class Downloader
             return trim($process->getOutput());
         }
     }
-
-
-    /**
-     * Get video stream from an M3U playlist.
-     *
-     * @param Video $video Video object
-     * @return resource popen stream
-     * @throws WolfrackLibraryException
-     * @throws AvconvException If avconv/ffmpeg is missing
-     * @throws PopenStreamException If the popen stream was not created correctly
-     */
+	
     public function getM3uStream(Video $video)
     {
         if (!$this->checkCommand([$this->avconv, '-version'])) {
@@ -307,42 +196,11 @@ class Downloader
         return $stream;
     }
 
-
-    /**
-     * Get audio stream of converted video.
-     *
-     * @param Video $video Video object
-     * @param int $audioBitrate MP3 bitrate when converting (in kbit/s)
-     * @param string|null $from Start the conversion at this time
-     * @param string|null $to End the conversion at this time
-     *
-     * @return resource popen stream
-     * @throws AvconvException
-     * @throws EmptyUrlException
-     * @throws InvalidProtocolConversionException
-     * @throws InvalidTimeException
-     * @throws PasswordException
-     * @throws PlaylistConversionException
-     * @throws PopenStreamException
-     * @throws RemuxException
-     * @throws WrongPasswordException
-     * @throws YoutubedlException
-     */
     public function getAudioStream(Video $video, $audioBitrate = 128, string $from = null, string $to = null)
     {
         return $this->getConvertedStream($video, $audioBitrate, 'mp3', true, $from, $to);
     }
 
-
-    /**
-     * Get an avconv stream to remux audio and video.
-     *
-     * @param Video $video Video object
-     * @return resource popen stream
-     * @throws WolfrackLibraryException
-     * @throws PopenStreamException If the popen stream was not created correctly
-     * @throws RemuxException If the video does not have two URLs
-     */
     public function getRemuxStream(Video $video)
     {
         $urls = $video->getUrl();
@@ -373,15 +231,6 @@ class Downloader
         return $stream;
     }
 
-
-    /**
-     * Get video stream from an RTMP video.
-     *
-     * @param Video $video Video object
-     * @return resource popen stream
-     * @throws WolfrackLibraryException
-     * @throws PopenStreamException If the popen stream was not created correctly
-     */
     public function getRtmpStream(Video $video)
     {
         $urls = $video->getUrl();
@@ -408,28 +257,6 @@ class Downloader
         return $stream;
     }
 
-    /**
-     * Get the stream of a converted video.
-     *
-     * @param Video $video Video object
-     * @param int $audioBitrate Audio bitrate of the converted file
-     * @param string $filetype Filetype of the converted file
-     * @param bool $audioOnly True to return an audio-only file
-     * @param string|null $from Start the conversion at this time
-     * @param string|null $to End the conversion at this time
-     *
-     * @return resource popen stream
-     * @throws AvconvException
-     * @throws EmptyUrlException
-     * @throws InvalidProtocolConversionException If you try to convert an M3U or Dash media
-     * @throws InvalidTimeException
-     * @throws PasswordException
-     * @throws PlaylistConversionException If you try to convert a playlist
-     * @throws PopenStreamException If the popen stream was not created correctly
-     * @throws RemuxException
-     * @throws WrongPasswordException
-     * @throws YoutubedlException
-     */
     public function getConvertedStream(
         Video $video,
         int $audioBitrate,
@@ -461,32 +288,13 @@ class Downloader
         return $stream;
     }
 
-    /**
-     * List all extractors.
-     *
-     * @return string[] Extractors
-     *
-     * @throws WolfrackLibraryException
-     */
     public function getExtractors()
     {
         return explode("\n", trim($this->callYoutubedl(['--list-extractors'])));
     }
 
-
-    /**
-     * Get a HTTP response containing the video.
-     *
-     * @param Video $video Video object
-     * @param mixed[] $headers HTTP headers of the request
-     *
-     * @return ResponseInterface
-     * @throws WolfrackLibraryException
-     * @link https://github.com/guzzle/guzzle/issues/2640
-     */
     public function getHttpResponse(Video $video, array $headers = [])
     {
-        // IDN conversion breaks with Google hosts like https://r3---sn-25glene6.googlevideo.com/.
         $client = new Client(['idn_conversion' => false]);
         $urls = $video->getUrl();
         $stream_context_options = [];

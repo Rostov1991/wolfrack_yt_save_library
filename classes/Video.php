@@ -1,9 +1,5 @@
 <?php
 
-/**
- * Video class.
- */
-
 namespace Wolfrack\Library;
 
 use Wolfrack\Library\Exception\EmptyUrlException;
@@ -12,77 +8,21 @@ use Wolfrack\Library\Exception\WrongPasswordException;
 use Wolfrack\Library\Exception\YoutubedlException;
 use stdClass;
 
-/**
- * Extract info about videos.
- *
- * Due to the way youtube-dl behaves, this class can also contain information about a playlist.
- *
- * @property-read string $title         Title
- * @property-read string $protocol      Network protocol (HTTP, RTMP, etc.)
- * @property-read string $url           File URL
- * @property-read string $ext           File extension
- * @property-read string $extractor_key youtube-dl extractor class used
- * @property-read array $entries       List of videos (if the object contains information about a playlist)
- * @property-read array $rtmp_conn
- * @property-read string|null $_type         Object type (usually "playlist" or null)
- * @property-read stdClass $downloader_options
- * @property-read stdClass $http_headers
- */
 class Video
 {
 
-    /**
-     * URL of the page containing the video.
-     *
-     * @var string
-     */
     private $webpageUrl;
 
-    /**
-     * Requested video format.
-     *
-     * @var string
-     */
     private $requestedFormat;
 
-    /**
-     * Password.
-     *
-     * @var string|null
-     */
     private $password;
 
-    /**
-     * JSON object returned by youtube-dl.
-     *
-     * @var stdClass
-     */
     private $json;
 
-    /**
-     * URLs of the video files.
-     *
-     * @var string[]
-     */
     private $urls;
 
-    /**
-     * Downloader instance.
-     *
-     * @var Downloader
-     */
     private $downloader;
 
-    /**
-     * VideoDownload constructor.
-     *
-     * @param Downloader $downloader Downloader instance
-     * @param string $webpageUrl URL of the page containing the video
-     * @param string $requestedFormat Requested video format
-     *                                (can be any format string accepted by youtube-dl,
-     *                                including selectors like "[height<=720]")
-     * @param string|null $password Password
-     */
     public function __construct(
         Downloader $downloader,
         string $webpageUrl,
@@ -95,16 +35,6 @@ class Video
         $this->password = $password;
     }
 
-    /**
-     * Get a property from youtube-dl.
-     *
-     * @param string $prop Property
-     *
-     * @return string
-     * @throws PasswordException
-     * @throws WrongPasswordException
-     * @throws YoutubedlException
-     */
     public function getProp($prop = 'dump-json')
     {
         $arguments = ['--' . $prop];
@@ -124,14 +54,6 @@ class Video
         return $this->downloader->callYoutubedl($arguments);
     }
 
-    /**
-     * Get all information about a video.
-     *
-     * @return stdClass Decoded JSON
-     * @throws PasswordException
-     * @throws WrongPasswordException
-     * @throws YoutubedlException
-     */
     public function getJson()
     {
         if (!isset($this->json)) {
@@ -141,16 +63,6 @@ class Video
         return $this->json;
     }
 
-    /**
-     * Magic method to get a property from the JSON object returned by youtube-dl.
-     *
-     * @param string $name Property
-     *
-     * @return mixed
-     * @throws PasswordException
-     * @throws WrongPasswordException
-     * @throws YoutubedlException
-     */
     public function __get(string $name)
     {
         if (isset($this->$name)) {
@@ -160,37 +72,13 @@ class Video
         return null;
     }
 
-    /**
-     * Magic method to check if the JSON object returned by youtube-dl has a property.
-     *
-     * @param string $name Property
-     *
-     * @return bool
-     * @throws PasswordException
-     * @throws WrongPasswordException
-     * @throws YoutubedlException
-     */
     public function __isset(string $name)
     {
         return isset($this->getJson()->$name);
     }
 
-    /**
-     * Get URL of video from URL of page.
-     *
-     * It generally returns only one URL.
-     * But it can return two URLs when multiple formats are specified
-     * (eg. bestvideo+bestaudio).
-     *
-     * @return string[] URLs of video
-     * @throws EmptyUrlException
-     * @throws PasswordException
-     * @throws WrongPasswordException
-     * @throws YoutubedlException
-     */
     public function getUrl()
     {
-        // Cache the URLs.
         if (!isset($this->urls)) {
             $this->urls = explode("\n", $this->getProp('get-url'));
 
@@ -202,29 +90,11 @@ class Video
         return $this->urls;
     }
 
-    /**
-     * Get filename of video file from URL of page.
-     *
-     * @return string Filename of extracted video
-     * @throws PasswordException
-     * @throws WrongPasswordException
-     * @throws YoutubedlException
-     */
     public function getFilename()
     {
         return trim($this->getProp('get-filename'));
     }
 
-    /**
-     * Get filename of video with the specified extension.
-     *
-     * @param string $extension New file extension
-     *
-     * @return string Filename of extracted video with specified extension
-     * @throws PasswordException
-     * @throws WrongPasswordException
-     * @throws YoutubedlException
-     */
     public function getFileNameWithExtension(string $extension)
     {
         if (isset($this->ext)) {
@@ -234,11 +104,6 @@ class Video
         }
     }
 
-    /**
-     * Return arguments used to run rtmp for a specific video.
-     *
-     * @return string[] Arguments
-     */
     public function getRtmpArguments()
     {
         $arguments = [];
@@ -271,13 +136,6 @@ class Video
         return $arguments;
     }
 
-    /**
-     * Get the same video but with another format.
-     *
-     * @param string $format New format
-     *
-     * @return Video
-     */
     public function withFormat(string $format)
     {
         return new self($this->downloader, $this->webpageUrl, $format, $this->password);
